@@ -5,8 +5,7 @@ import Footer from "@/components/Footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tentang Sistem | Gereja Cloud",
-  description: "Detail sistem informasi manajemen arsip digital gereja.",
+  title: "Tentang Kami | Gereja Kristen Pasundan Tasikmalaya",
 };
 
 export default function TentangPage() {
@@ -14,14 +13,14 @@ export default function TentangPage() {
     <main>
       <Navbar />
       <PageHeader 
-        title="Tentang Sistem" 
-        subtitle="Integrasi teknologi cloud computing untuk efisiensi administrasi gereja."
+        title="Tentang Kami" 
+        subtitle=""
       />
       {/* Kita reuse komponen About yang sudah ada */}
       <About /> 
       
       {/* Tambahan konten spesifik halaman ini jika perlu */}
-      <section className="py-20 bg-gray-50">
+      {/* <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-6 text-center">
             <h3 className="text-2xl font-bold text-primary mb-8">Teknologi yang Digunakan</h3>
             <div className="flex flex-wrap justify-center gap-4">
@@ -32,7 +31,7 @@ export default function TentangPage() {
                 ))}
             </div>
         </div>
-      </section>
+      </section> */}
       <Footer />
     </main>
   );

@@ -27,7 +27,7 @@ export default function LoginPage() {
              <Church size={48} weight="fill" className="text-accent" />
           </div>
           <h2 className="text-2xl font-bold text-white">Admin Portal</h2>
-          <p className="text-blue-200">Gereja Cloud Management System</p>
+          <p className="text-blue-200">GKP Tasikmalaya</p>
         </div>
 
         <div className="p-8">
@@ -52,7 +52,7 @@ export default function LoginPage() {
                   type="email" 
                   required
                   className="pl-10 w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
-                  placeholder="admin@gerejacloud.org"
+                  placeholder="admin@gmail.com"
                 />
               </div>
             </div>

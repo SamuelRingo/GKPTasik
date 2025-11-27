@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Sun, Moon, UsersThree, MusicNotes, Baby } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata = {
-  title: "Jadwal Ibadah | Gereja Cloud",
+  title: "Jadwal Ibadah | Gereja Kristen Pasundan Tasikmalaya",
 };
 
 export default async function JadwalPage() {
@@ -29,7 +29,7 @@ export default async function JadwalPage() {
       <Navbar />
       <PageHeader 
         title="Jadwal Ibadah" 
-        subtitle="Bergabunglah dalam persekutuan memuji Tuhan setiap minggunya."
+        subtitle=""
       />
       
       <section className="py-20 bg-white">

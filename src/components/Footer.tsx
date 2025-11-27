@@ -20,10 +20,9 @@ export default async function Footer() {
           <div>
             <div className="flex items-center gap-2 text-white font-bold text-xl mb-4">
               <Church size={32} weight="fill" className="text-accent" />
-              <span>{settings?.nama_gereja?.split(' ')[0] || 'GEREJA'}<span className="text-accent">CLOUD</span></span>
+              <span>{settings?.nama_gereja?.split(' ')[0] || 'GEREJA'}<span className="text-accent">Tasikmalaya</span></span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              Mewujudkan administrasi gereja yang efisien, transparan, dan modern.
             </p>
             {/* Social Media Icons (Static for now) */}
             <div className="flex gap-4">
@@ -39,7 +38,7 @@ export default async function Footer() {
               <li><Link href="/" className="hover:text-accent transition">Beranda</Link></li>
               <li><Link href="/warta" className="hover:text-accent transition">Warta Jemaat</Link></li>
               <li><Link href="/jadwal" className="hover:text-accent transition">Jadwal Ibadah</Link></li>
-              <li><Link href="/login" className="hover:text-accent transition flex items-center gap-2"><LockKey weight="bold" /> Login Admin</Link></li>
+              <li><Link href="/login" className="hover:text-accent transition flex items-center gap-2">Portal</Link></li>
             </ul>
           </div>
 
@@ -65,8 +64,15 @@ export default async function Footer() {
           {/* Map */}
           <div>
             <h4 className="font-bold text-lg mb-6">Peta Lokasi</h4>
-            <div className="w-full h-40 bg-gray-800 rounded-lg flex items-center justify-center text-gray-500">
-              <span className="text-xs">[Google Maps Embed Area]</span>
+            <div className="w-full h-40 bg-gray-800 rounded-lg overflow-hidden">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.2132788794997!2d108.21759!3d-7.329927!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6f5746fb69d581%3A0x7ddf459d9852fe12!2sGereja%20Kristen%20Pasundan%20Jemaat%20Tasikmalaya!5e0!3m2!1sid!2sid!4v1764193016637!5m2!1sid!2sid" 
+                className="w-full h-full"
+                style={{ border:0 }} 
+                allowFullScreen={true}
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade">
+              </iframe>
             </div>
           </div>
         </div>

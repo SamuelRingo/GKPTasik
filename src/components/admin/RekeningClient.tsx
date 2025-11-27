@@ -51,7 +51,7 @@ export function AddRekeningButton() {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Atas Nama</label>
-                    <input name="an" type="text" required placeholder="Gereja Cloud" className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-primary" />
+                    <input name="an" type="text" required placeholder="Gereja Kristen Pasundan Tasikmalaya" className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-primary" />
                 </div>
                 <button type="submit" disabled={isLoading} className="w-full py-2 bg-primary text-white rounded-lg font-bold hover:bg-blue-800 transition">
                     {isLoading ? 'Menyimpan...' : 'Simpan Rekening'}

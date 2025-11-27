@@ -1,9 +1,10 @@
 import { createClient } from "@/utils/supabase/server";
-import { ArrowDownRight, ArrowUpRight, Printer, CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowDownRight, ArrowUpRight, CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import SearchInput from "@/components/admin/SearchInput";
 import JenisFilter from "@/components/admin/JenisFilter";
 import { AddTransaksiButton, TransaksiActions } from "@/components/admin/KeuanganClient";
 import Link from "next/link";
+import ExportButton from "@/components/admin/ExportButton";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -67,9 +68,7 @@ export default async function KeuanganPage(props: {
           <p className="text-gray-500">Monitoring arus kas dan persembahan.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-             <button className="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition shadow-sm w-full sm:w-auto">
-                <Printer weight="bold" /> Cetak Laporan
-            </button>
+            <ExportButton />
             <AddTransaksiButton />
         </div>
       </header>

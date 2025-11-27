@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { FilePdf, DownloadSimple, CalendarBlank } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata = {
-  title: "Warta Jemaat | Gereja Cloud",
+  title: "Warta Jemaat | Gereja Kristen Pasundan Tasikmalaya",
 };
 
 export default async function WartaPage() {

@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr"; // Funnel dihapus karena pindah ke component
 import SearchInput from "@/components/admin/SearchInput"; 
 import WilayahFilter from "@/components/admin/WilayahFilter"; // 1. Import Filter Baru
+import JemaatExportButton from "@/components/admin/JemaatExportButton"; // Import Export Button
 import Link from "next/link";
 import { AddJemaatButton, ActionButtons } from "@/components/admin/JemaatClient"; 
 
@@ -62,7 +63,10 @@ export default async function JemaatPage(props: {
             <SearchInput placeholder="Cari nama jemaat..." />
             
             {/* 7. Pasang Komponen Filter Disini */}
-            <WilayahFilter /> 
+            <div className="flex gap-2 w-full md:w-auto">
+              <WilayahFilter />
+              <JemaatExportButton />
+            </div>
         </div>
 
         {/* Table */}

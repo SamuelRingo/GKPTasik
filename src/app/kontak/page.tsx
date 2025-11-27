@@ -20,7 +20,7 @@ export default async function KontakPage() {
       <Navbar />
       <PageHeader 
         title="Hubungi Kami" 
-        subtitle="Kami siap membantu Anda terkait informasi gereja dan sistem arsip."
+        subtitle=""
       />
       
       <section className="py-20 bg-white">
@@ -32,7 +32,7 @@ export default async function KontakPage() {
                     <div>
                         <h3 className="text-2xl font-bold text-primary mb-6">Informasi Sekretariat</h3>
                         <p className="text-gray-600 mb-6">
-                             {settings?.nama_gereja || 'Gereja Cloud Indonesia'}
+                             {settings?.nama_gereja || 'Gereja Kristen Pasundan Jemaat Tasikmalaya'}
                         </p>
                     </div>
 

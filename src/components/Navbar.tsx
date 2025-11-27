@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation"; // Hook untuk cek halaman aktif
-import { Church, List, X } from "@phosphor-icons/react";
+import { List, X } from "@phosphor-icons/react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +21,7 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Beranda", href: "/" },
-    { name: "Tentang Sistem", href: "/tentang" },
+    { name: "Tentang Kami", href: "/tentang" },
     { name: "Sejarah", href: "/sejarah" },
     { name: "Jadwal", href: "/jadwal" },
     { name: "Warta", href: "/warta" },
@@ -36,8 +37,8 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 text-primary font-bold text-xl tracking-tight">
-          <Church size={32} weight="fill" className="text-accent" />
-          <span>GEREJA<span className="text-accent">CLOUD</span></span>
+          <Image src="/Logo_GKP.png" alt="Logo GKP Tasikmalaya" width={32} height={32} className="h-auto" />
+          <span>Gereja Kristen Pasundan Tasikmalaya<span className="text-accent"></span></span>
         </Link>
 
         {/* Desktop Menu */}

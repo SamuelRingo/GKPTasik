@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Heart, HandCoins, QrCode, Bank, Copy } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata = {
-  title: "Persembahan Kasih | Gereja Cloud",
+  title: "Persembahan Kasih | Gereja Kristen Pasundan Tasikmalaya",
 };
 
 export default async function PersembahanPage() {
@@ -27,7 +27,7 @@ export default async function PersembahanPage() {
       <Navbar />
       <PageHeader 
         title="Persembahan Kasih" 
-        subtitle="Mendukung pelayanan gereja melalui persembahan digital."
+        subtitle="Mendukung pelayanan gereja secara digital."
       />
       
       <section className="py-20 bg-white">
@@ -38,7 +38,7 @@ export default async function PersembahanPage() {
                     {/* Decor */}
                     <Heart weight="fill" className="text-[200px] absolute -top-10 -right-10 text-white/5" />
                     
-                    <h2 className="text-2xl md:text-3xl font-bold mb-4 relative z-10">Rekening Pelayanan</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold mb-4 relative z-10">Rekening GKP Tasikmalaya</h2>
                     <p className="text-blue-100 mb-8 relative z-10">
                         "Hendaklah masing-masing memberikan menurut kerelaan hatinya, jangan dengan sedih hati atau karena paksaan." (2 Korintus 9:7)
                     </p>

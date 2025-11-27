@@ -27,8 +27,8 @@ export function AddJemaatButton() {
     
     toast.dismiss(loadingToast); // Tutup loading
 
-    if (res?.error) {
-        toast.error(`Gagal menyimpan: ${res.error}`);
+    if (!res.success) {
+        toast.error(`Gagal menyimpan: ${res.message}`);
     } else {
         toast.success('Data Jemaat berhasil ditambahkan!');
         setIsOpen(false); // Tutup modal hanya jika sukses
@@ -56,7 +56,7 @@ export function AddJemaatButton() {
             <form action={handleSubmit} className="p-6 space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                    <input name="nama" type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary transition" placeholder="Contoh: Budi Santoso" />
+                    <input name="nama_lengkap" type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary transition" placeholder="Contoh: Budi Santoso" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Wilayah</label>
@@ -64,6 +64,8 @@ export function AddJemaatButton() {
                         <option value="Wilayah 1">Wilayah 1</option>
                         <option value="Wilayah 2">Wilayah 2</option>
                         <option value="Wilayah 3">Wilayah 3</option>
+                        <option value="Wilayah 4">Wilayah 4</option>
+                        <option value="Wilayah 5">Wilayah 5</option>
                         <option value="Umum">Umum</option>
                     </select>
                 </div>
@@ -104,12 +106,12 @@ export function ActionButtons({ jemaat }: { jemaat: Jemaat }) {
     setIsLoading(true);
     const loadingToast = toast.loading('Memperbarui data...');
     
-    const res = await updateJemaat(formData);
+    const res = await updateJemaat(jemaat.id, formData);
     
     toast.dismiss(loadingToast);
     
-    if (res?.error) {
-        toast.error(`Gagal update: ${res.error}`);
+    if (!res.success) {
+        toast.error(`Gagal update: ${res.message}`);
     } else {
         toast.success('Data berhasil diperbarui!');
         setIsEditOpen(false);
@@ -151,11 +153,11 @@ export function ActionButtons({ jemaat }: { jemaat: Jemaat }) {
               toast.dismiss(t.id); // Tutup dialog konfirmasi
               const loadingId = toast.loading('Menghapus data...'); // Tampilkan loading
               
-              const res = await deleteJemaat(jemaat.id); // Call Server Action
+              const res = await deleteJemaat(jemaat.id, jemaat.nama_lengkap); // Call Server Action
               
               toast.dismiss(loadingId); // Tutup loading
-              if (res?.error) {
-                  toast.error(`Gagal: ${res.error}`);
+              if (!res.success) {
+                  toast.error(`Gagal: ${res.message}`);
               } else {
                   toast.success('Data berhasil dihapus permanen.');
               }
@@ -211,7 +213,7 @@ export function ActionButtons({ jemaat }: { jemaat: Jemaat }) {
                 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                    <input name="nama" defaultValue={jemaat.nama_lengkap} type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary transition" />
+                    <input name="nama_lengkap" defaultValue={jemaat.nama_lengkap} type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary transition" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Wilayah</label>

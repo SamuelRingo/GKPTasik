@@ -42,7 +42,7 @@ export default function DashboardLayoutClient({
             >
                 <List size={32} />
             </button>
-            <span className="font-bold text-lg text-primary">GEREJA<span className="text-accent">CLOUD</span></span>
+            <span className="font-bold text-lg text-primary">GKP<span className="text-accent">Tasikmalaya</span></span>
         </header>
 
         {/* CONTENT AREA */}

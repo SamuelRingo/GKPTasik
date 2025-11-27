@@ -50,7 +50,7 @@ export default function Sidebar({ onCloseMobile }: { onCloseMobile?: () => void 
         <div className="flex items-center gap-2">
             <Church size={32} weight="fill" className="text-primary" />
             <span className="font-bold text-lg text-primary tracking-tight">
-              GEREJA<span className="text-accent">CLOUD</span>
+              GKP<span className="text-accent">Tasikmalaya</span>
             </span>
         </div>
         
