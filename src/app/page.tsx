@@ -26,7 +26,7 @@ export default async function Home() {
     .from('jadwal_ibadah')
     .select('*')
     .order('created_at', { ascending: true })
-    .limit(3);
+    .limit(5);
 
   // Helper Icon berdasarkan kategori/nama
   const getIcon = (kategori: string) => {

@@ -8,7 +8,7 @@ export default function About() {
           <div className="md:w-1/2 relative">
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-accent/10 rounded-full blur-xl"></div>
             <img
-              src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+              src="/MJ.jpeg"
               alt="Digital Archive"
               className="rounded-2xl shadow-2xl relative z-10 w-full"
             />
