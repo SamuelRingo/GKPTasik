@@ -143,7 +143,9 @@ export function ArsipActions({ arsip }: { arsip: Arsip }) {
               toast.dismiss(t.id);
               const load = toast.loading('Menghapus file...');
               // Pass URL File juga untuk dihapus di storage
-              await deleteArsip(arsip.id, arsip.url_file); 
+              if (arsip.url_file) {
+                await deleteArsip(arsip.id, arsip.url_file as string, arsip.nama_dokumen);
+              }
               toast.dismiss(load);
               toast.success('Terhapus');
             }} 
