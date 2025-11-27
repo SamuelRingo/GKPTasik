@@ -12,7 +12,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Gereja Digital & Sistem Arsip Cloud",
+  title: "Gereja Kristen Pasundan Tasikmalaya",
   description: "Sistem Informasi Manajemen Arsip Digital dan Website Gereja Berbasis Cloud",
 };
 

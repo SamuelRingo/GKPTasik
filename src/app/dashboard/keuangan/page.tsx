@@ -77,15 +77,15 @@ export default async function KeuanganPage(props: {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
          <div className="bg-white p-6 rounded-xl shadow-sm border border-green-100">
              <p className="text-sm text-gray-500 mb-1 font-medium">Total Pemasukan</p>
-             <h3 className="text-2xl font-bold text-green-600">{formatRupiah(totalMasuk)}</h3>
+             <h3 className="text-xl font-bold text-green-600">{formatRupiah(totalMasuk)}</h3>
          </div>
          <div className="bg-white p-6 rounded-xl shadow-sm border border-red-100">
              <p className="text-sm text-gray-500 mb-1 font-medium">Total Pengeluaran</p>
-             <h3 className="text-2xl font-bold text-red-600">{formatRupiah(totalKeluar)}</h3>
+             <h3 className="text-xl font-bold text-red-600">{formatRupiah(totalKeluar)}</h3>
          </div>
          <div className="bg-primary text-white p-6 rounded-xl shadow-sm">
              <p className="text-sm text-blue-200 mb-1 font-medium">Saldo Kas Saat Ini</p>
-             <h3 className="text-2xl font-bold">{formatRupiah(saldoTotal)}</h3>
+             <h3 className="text-xl font-bold">{formatRupiah(saldoTotal)}</h3>
          </div>
       </div>
 
