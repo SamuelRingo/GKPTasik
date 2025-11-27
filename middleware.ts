@@ -45,6 +45,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
+  // 3. Pastikan semua respons memiliki cookie yang benar untuk production
+  // Ini memastikan session cookie diupdate dengan benar di production build
   return response;
 }
 

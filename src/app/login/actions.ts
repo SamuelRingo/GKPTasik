@@ -25,3 +25,17 @@ export async function login(formData: FormData) {
 
   redirect('/dashboard');
 }
+
+// LOGOUT SERVER ACTION
+export async function logout() {
+  const supabase = await createClient();
+  
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error('Logout error:', error.message);
+    return { error: error.message };
+  }
+
+  redirect('/login');
+}

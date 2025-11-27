@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { 
   SquaresFour, 
   Users, 
@@ -15,11 +15,12 @@ import {
   CreditCard,    // Icon Rekening
   EnvelopeSimple // Icon Pesan Masuk (Baru)
 } from "@phosphor-icons/react";
+import { logout } from "@/app/login/actions";
+import toast from "react-hot-toast";
 
 // Menerima props optional untuk menutup sidebar di mobile
 export default function Sidebar({ onCloseMobile }: { onCloseMobile?: () => void }) {
   const pathname = usePathname();
-  const router = useRouter();
 
   // Daftar Menu Navigasi Lengkap
   const menuItems = [
@@ -34,12 +35,19 @@ export default function Sidebar({ onCloseMobile }: { onCloseMobile?: () => void 
   ];
 
   const handleLogout = async () => {
-    // Jika ingin logout proper dari Supabase (menghapus cookie sesi):
-    // const supabase = createClientComponentClient();
-    // await supabase.auth.signOut();
-    
-    // Redirect ke halaman utama
-    router.push("/");
+    const toastId = toast.loading('Sedang logout...');
+    try {
+      await logout();
+      // logout() akan redirect, jadi kode di sini tidak akan dijalankan
+    } catch (error: any) {
+      // Ignore redirect errors - mereka adalah redirect yang diinginkan
+      if (error?.message?.includes('NEXT_REDIRECT')) {
+        return;
+      }
+      toast.dismiss(toastId);
+      toast.error('Gagal logout. Silakan coba lagi.');
+      console.error('Logout error:', error);
+    }
   };
 
   return (
