@@ -115,7 +115,7 @@ export default function SettingsClient({ orgData, profileData, userEmail, admins
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                {/* <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Fitur Website</h3>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
@@ -139,7 +139,7 @@ export default function SettingsClient({ orgData, profileData, userEmail, admins
                       </label>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 
                 <div className="flex justify-end">
                      <button disabled={isLoading} type="submit" className="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-800 transition flex items-center gap-2">
@@ -216,37 +216,48 @@ export default function SettingsClient({ orgData, profileData, userEmail, admins
             {activeTab === "admins" && (
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in">
                     <h3 className="text-lg font-bold text-gray-800 mb-6 border-b border-gray-100 pb-2">Daftar Admin</h3>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left text-gray-500 min-w-[500px]">
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
-                                    <th className="px-4 py-3">Nama</th>
-                                    <th className="px-4 py-3">Role</th>
-                                    <th className="px-4 py-3">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {adminsList.map((admin) => (
-                                    <tr key={admin.id} className="border-b">
-                                        <td className="px-4 py-3 font-bold text-gray-900">
-                                            {admin.full_name || 'Admin User'}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold uppercase">
-                                                {admin.role || 'Staff'}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <span className="flex items-center gap-1 text-green-600 text-xs font-bold">
-                                                <Check weight="bold"/> Aktif
-                                            </span>
-                                        </td>
+                    {adminsList.length === 0 ? (
+                        <div className="text-center py-12">
+                            <Users size={48} className="mx-auto text-gray-300 mb-4" />
+                            <p className="text-gray-500">Belum ada data admin ditemukan.</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left text-gray-500 min-w-[600px]">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th className="px-4 py-3">Nama</th>
+                                        <th className="px-4 py-3">Email</th>
+                                        <th className="px-4 py-3">Role</th>
+                                        <th className="px-4 py-3">Status</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    <p className="mt-4 text-xs text-gray-400">*Untuk menambah admin baru, silakan hubungi tim IT Support atau Super Admin via database.</p>
+                                </thead>
+                                <tbody>
+                                    {adminsList.map((admin) => (
+                                        <tr key={admin.id} className="border-b hover:bg-gray-50 transition">
+                                            <td className="px-4 py-3 font-bold text-gray-900">
+                                                {admin.full_name || 'Admin Tanpa Nama'}
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-600">
+                                                {admin.email || '-'}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold uppercase">
+                                                    {admin.role || 'Staff'}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <span className="flex items-center gap-1 text-green-600 text-xs font-bold">
+                                                    <Check weight="bold"/> Aktif
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                    <p className="mt-4 text-xs text-gray-400">*Untuk menambah admin baru, silakan hubungi tim IT Support atau Super Admin melalui Supabase Auth.</p>
                 </div>
             )}
 

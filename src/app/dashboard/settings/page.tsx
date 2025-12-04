@@ -1,6 +1,56 @@
 import { createClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import SettingsClient from "@/components/admin/SettingsClient";
 import { redirect } from "next/navigation";
+
+type AdminProfile = {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  role: string | null;
+};
+
+/**
+ * Fungsi untuk mengambil semua admin dari Supabase Auth + Profiles
+ */
+async function getAllAdmins(): Promise<AdminProfile[]> {
+  try {
+    const adminClient = createAdminClient();
+
+    // 1. Ambil semua user dari auth.users menggunakan admin API
+    const { data: { users }, error: usersError } = await adminClient.auth.admin.listUsers();
+    
+    if (usersError) {
+      console.error("Error fetching users:", usersError);
+      return [];
+    }
+
+    // 2. Ambil semua profile dari tabel profiles
+    const { data: profiles, error: profilesError } = await adminClient
+      .from('profiles')
+      .select('id, full_name, role');
+
+    if (profilesError) {
+      console.error("Error fetching profiles:", profilesError);
+      return [];
+    }
+
+    // 3. Gabungkan data: user dari auth.users dengan profile data
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+
+    const adminsList: AdminProfile[] = (users || []).map(user => ({
+      id: user.id,
+      email: user.email || null,
+      full_name: profileMap.get(user.id)?.full_name || 'Admin Tanpa Nama',
+      role: profileMap.get(user.id)?.role || 'Staff',
+    }));
+
+    return adminsList;
+  } catch (error) {
+    console.error("Error in getAllAdmins:", error);
+    return [];
+  }
+}
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -23,11 +73,8 @@ export default async function SettingsPage() {
     .eq('id', user.id)
     .single();
 
-  // 4. Fetch Daftar Semua Admin (Profiles)
-  // Ini akan menampilkan semua user yang terdaftar di sistem
-  const { data: adminsList } = await supabase
-    .from('profiles')
-    .select('id, full_name, role');
+  // 4. Fetch Daftar Semua Admin dengan admin client
+  const adminsList = await getAllAdmins();
 
   return (
     <div>
