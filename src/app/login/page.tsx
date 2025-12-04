@@ -52,7 +52,7 @@ export default function LoginPage() {
                   type="email" 
                   required
                   className="pl-10 w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
-                  placeholder="admin@gmail.com"
+                  placeholder="example@gmail.com"
                 />
               </div>
             </div>
