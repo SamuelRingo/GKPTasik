@@ -2,6 +2,7 @@
 
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
 interface DynamicSearchInputProps {
   placeholder: string;
@@ -19,23 +20,56 @@ export function DynamicSearchInput({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [inputValue, setInputValue] = useState(searchParams.get('query')?.toString() || '');
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleSearch = (term: string) => {
-    if (isOcrView) {
-      // Di view OCR, update state local tanpa URL change
-      onOcrSearchChange?.(term);
-    } else {
-      // Di view Standar, update URL dengan query
+  // Debounce untuk search di tabel standar
+  useEffect(() => {
+    if (isOcrView) return; // Skip debounce untuk OCR view
+
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Set new timer
+    debounceTimerRef.current = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
-      params.set('page', '1');
+      // Jangan reset page jika user hanya mengubah search query, pertahankan halaman saat ini
+      // Hanya reset ke halaman 1 jika query benar-benar berubah dari kosong ke ada atau sebaliknya
+      const currentQuery = searchParams.get('query') || '';
+      if (inputValue && !currentQuery) {
+        // Baru mulai search, reset ke halaman 1
+        params.set('page', '1');
+      } else if (!inputValue && currentQuery) {
+        // Menghapus search query, reset ke halaman 1
+        params.set('page', '1');
+      }
+      // Jika hanya update query (tidak beralih dari search ke non-search), pertahankan halaman
 
-      if (term) {
-        params.set('query', term);
+      if (inputValue) {
+        params.set('query', inputValue);
       } else {
         params.delete('query');
       }
       
       replace(`${pathname}?${params.toString()}`);
+    }, 1000); // 1 detik delay
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [inputValue, isOcrView, pathname, replace, searchParams]);
+
+  const handleSearch = (term: string) => {
+    if (isOcrView) {
+      // Di view OCR, update state local tanpa URL change (instant)
+      onOcrSearchChange?.(term);
+    } else {
+      // Di view Standar, update input value (debounced URL change di useEffect)
+      setInputValue(term);
     }
   };
 
@@ -43,7 +77,7 @@ export function DynamicSearchInput({
     ? "Cari teks dalam hasil OCR..." 
     : "Cari nama dokumen...";
 
-  const currentValue = isOcrView ? ocrSearchQuery : (searchParams.get('query')?.toString() || '');
+  const currentValue = isOcrView ? ocrSearchQuery : inputValue;
 
   return (
     <div className="relative w-full md:w-auto">
