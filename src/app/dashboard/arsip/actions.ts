@@ -24,53 +24,14 @@ export async function createArsip(formData: FormData) {
   
   const nama = formData.get('nama') as string;
   const kategori = formData.get('kategori') as string;
-  const file = formData.get('file') as File;
+  const file = formData.get('file') as File; // Ambil object File
 
   if (!file) {
-    return { success: false, message: "File wajib diupload" };
+    return { error: "File wajib diupload" };
   }
 
-  // A. Panggil Cloudflare Worker untuk OCR
-  const workerUrl = process.env.CLOUDFLARE_WORKER_URL;
-  const authToken = process.env.CLOUDFLARE_WORKER_AUTH_TOKEN;
-
-  if (!workerUrl || !authToken) {
-    console.error("Cloudflare Worker URL or Auth Token is not configured.");
-    return { success: false, message: "Konfigurasi OCR tidak lengkap. Silakan hubungi administrator." };
-  }
-
-  let hasil_ocr = '';
-  try {
-    const ocrFormData = new FormData();
-    ocrFormData.append('file', file);
-
-    const response = await fetch(workerUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${authToken}`
-      },
-      body: ocrFormData,
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Request ke Cloudflare AI gagal, status: ${response.status}, pesan: ${errorText}`);
-    }
-
-    const result = await response.json();
-    hasil_ocr = result.text || '';
-    if (!hasil_ocr) {
-        console.warn(`OCR berhasil tapi tidak ada teks yang terdeteksi untuk file: ${file.name}`);
-    }
-
-  } catch (e: any) {
-    console.error("OCR processing error:", e);
-    await logActivity(`Gagal memproses OCR untuk file: ${file.name}`, 'Gagal');
-    return { success: false, message: `Gagal memproses OCR: ${e.message}` };
-  }
-
-
-  // B. Upload File ke Supabase Storage
+  // A. Upload File ke Supabase Storage
+  // Buat nama file unik: timestamp-namafile.pdf
   const fileName = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
   
   const { data: uploadData, error: uploadError } = await supabase
@@ -87,18 +48,17 @@ export async function createArsip(formData: FormData) {
     return { success: false, message: `Gagal mengunggah file: ${uploadError.message}` };
   }
 
-  // C. Dapatkan Public URL
+  // B. Dapatkan Public URL
   const { data: { publicUrl } } = supabase
     .storage
     .from('arsip')
     .getPublicUrl(fileName);
 
-  // D. Simpan Metadata dan Hasil OCR ke Database
+  // C. Simpan Metadata ke Database
   const arsipData = {
     nama_dokumen: nama,
     kategori: kategori,
-    url_file: publicUrl,
-    hasil_ocr: hasil_ocr, // Simpan hasil OCR
+    url_file: publicUrl, // Simpan link hasil upload
   };
 
   const { error: dbError } = await supabase.from("arsip").insert([arsipData]);
@@ -111,9 +71,9 @@ export async function createArsip(formData: FormData) {
     return { success: false, message: `Gagal menyimpan data arsip: ${dbError.message}` };
   }
 
-  await logActivity(`Mengunggah arsip baru: ${file.name} (dengan OCR)`, 'Sukses');
+  await logActivity(`Mengunggah arsip baru: ${file.name}`, 'Sukses');
   revalidatePath("/dashboard/arsip");
-  return { success: true, message: "Arsip berhasil diunggah dan diproses." };
+  return { success: true, message: "Arsip berhasil diunggah." };
 }
 
 // 2. UPDATE (Hanya Metadata dulu untuk kesederhanaan)

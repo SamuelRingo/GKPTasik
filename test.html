@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Worker OCR Gereja</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; }
+        .box { border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+        button { background: #0070f3; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px;}
+        button:hover { background: #005bb5; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>🔍 Test Koneksi Worker OCR</h2>
+        <p>Pilih gambar yang ada tulisannya untuk mengetes Worker Anda.</p>
+        
+        <!-- Input File -->
+        <input type="file" id="imageInput" accept="image/*" />
+        <br><br>
+        
+        <!-- Tombol Kirim -->
+        <button onclick="runTest()">Kirim ke Worker</button>
+    </div>
+
+    <h3>Hasil:</h3>
+    <div id="status" style="color: blue; font-weight: bold;"></div>
+    <pre id="output">Hasil JSON akan muncul di sini...</pre>
+
+    <script>
+        // --- KONFIGURASI ---
+        // Masukkan URL Worker lengkap Anda di sini
+        const WORKER_URL = "https://gereja-ocr-worker.njayyylaptopbaru.workers.dev"; 
+        
+        // Masukkan Password (AUTH_TOKEN) Anda di sini
+        const PASSWORD = "password123!"; 
+        // -------------------
+
+        async function runTest() {
+            const fileInput = document.getElementById('imageInput');
+            const statusDiv = document.getElementById('status');
+            const outputPre = document.getElementById('output');
+
+            if (fileInput.files.length === 0) {
+                alert("Pilih gambar dulu bos!");
+                return;
+            }
+
+            statusDiv.innerText = "⏳ Sedang mengirim ke Cloudflare... Tunggu sebentar...";
+            outputPre.innerText = "";
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${PASSWORD}`
+                    },
+                    body: formData
+                });
+
+                if (response.status === 401) {
+                    throw new Error("Password Salah (Unauthorized)! Cek AUTH_TOKEN Anda.");
+                }
+                
+                if (response.status === 500) {
+                    const errText = await response.text();
+                    throw new Error("Worker Error (500). Kemungkinan Binding AI belum terbaca. Coba redeploy worker sebentar. Detail: " + errText);
+                }
+
+                const result = await response.json();
+                statusDiv.innerText = "✅ SUKSES! Worker Berjalan.";
+                
+                // Menampilkan hasil JSON agar Anda yakin
+                outputPre.innerText = JSON.stringify(result, null, 2);
+
+            } catch (error) {
+                statusDiv.innerText = "❌ GAGAL.";
+                outputPre.innerText = error.message;
+            }
+        }
+    </script>
+</body>
+</html>

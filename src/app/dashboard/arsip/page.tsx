@@ -22,7 +22,7 @@ export default async function ArsipPage(props: {
 
   let dbQuery = supabase
     .from('arsip')
-    .select('*', { count: 'exact' })
+    .select('id, nama_dokumen, kategori, url_file, created_at', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(itemStart, itemEnd);
 
