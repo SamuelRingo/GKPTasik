@@ -13,21 +13,27 @@ interface OcrModalProps {
   arsipId: string;
   fileUrl: string;
   namaDokumen: string;
+  viewMode?: boolean;        // Jika true, tampilkan hasil OCR yang sudah tersimpan
+  hasilOcr?: string;         // Hasil OCR yang sudah tersimpan (untuk mode view)
 }
 
-export function OcrModal({ isOpen, onClose, onSuccess, arsipId, fileUrl, namaDokumen }: OcrModalProps) {
+export function OcrModal({ isOpen, onClose, onSuccess, arsipId, fileUrl, namaDokumen, viewMode = false, hasilOcr = '' }: OcrModalProps) {
   const [showResults, setShowResults] = useState(false);
   const [ocrResults, setOcrResults] = useState<string>('');
   const hasStartedRef = useRef(false);
   const { processPdfOcrFromUrl, isProcessing, progress, error: ocrError, status } = usePdfOcr();
 
-  // Auto-start OCR when modal opens (only once per open)
+  // Auto-start OCR when modal opens (only once per open) - kecuali untuk mode view
   useEffect(() => {
-    if (isOpen && !hasStartedRef.current) {
+    if (viewMode) {
+      // Mode view: tampilkan hasil OCR yang sudah tersimpan
+      setOcrResults(hasilOcr);
+      setShowResults(true);
+    } else if (isOpen && !hasStartedRef.current) {
       hasStartedRef.current = true;
       handleStartOcr();
     }
-  }, [isOpen]);
+  }, [isOpen, viewMode, hasilOcr]);
 
   // Reset when modal closes
   useEffect(() => {
@@ -77,6 +83,7 @@ export function OcrModal({ isOpen, onClose, onSuccess, arsipId, fileUrl, namaDok
   const handleClose = () => {
     setShowResults(false);
     setOcrResults('');
+    hasStartedRef.current = false;
     onClose();
   };
 
@@ -157,7 +164,7 @@ export function OcrModal({ isOpen, onClose, onSuccess, arsipId, fileUrl, namaDok
         <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden max-h-[80vh] flex flex-col">
           <div className="p-6 border-b border-gray-100 bg-blue-50 flex justify-between items-center">
             <div>
-              <h3 className="font-bold text-lg text-gray-800">Hasil OCR</h3>
+              <h3 className="font-bold text-lg text-gray-800">{viewMode ? 'Hasil OCR Tersimpan' : 'Hasil OCR'}</h3>
               <p className="text-xs text-gray-600 mt-1">{namaDokumen}</p>
             </div>
             <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
@@ -170,29 +177,42 @@ export function OcrModal({ isOpen, onClose, onSuccess, arsipId, fileUrl, namaDok
             </div>
           </div>
           <div className="p-6 border-t border-gray-100 flex gap-3">
-            <button
-              onClick={handleClose}
-              className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
-            >
-              Batal
-            </button>
-            <button
-              onClick={async () => {
-                const saveToast = toast.loading('Menyimpan hasil OCR...');
-                const saveRes = await updateArsipWithOcr(arsipId, ocrResults, 'completed');
-                toast.dismiss(saveToast);
-                if (saveRes.success) {
-                  toast.success('Hasil OCR berhasil disimpan!');
-                  onSuccess?.();
-                  handleClose();
-                } else {
-                  toast.error('Gagal menyimpan hasil OCR');
-                }
-              }}
-              className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-800"
-            >
-              Simpan Hasil
-            </button>
+            {viewMode ? (
+              // Mode view: hanya tombol tutup
+              <button
+                onClick={handleClose}
+                className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+              >
+                Tutup
+              </button>
+            ) : (
+              // Mode edit: tombol batal dan simpan
+              <>
+                <button
+                  onClick={handleClose}
+                  className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50"
+                >
+                  Batal
+                </button>
+                <button
+                  onClick={async () => {
+                    const saveToast = toast.loading('Menyimpan hasil OCR...');
+                    const saveRes = await updateArsipWithOcr(arsipId, ocrResults, 'completed');
+                    toast.dismiss(saveToast);
+                    if (saveRes.success) {
+                      toast.success('Hasil OCR berhasil disimpan!');
+                      onSuccess?.();
+                      handleClose();
+                    } else {
+                      toast.error('Gagal menyimpan hasil OCR');
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-800"
+                >
+                  Simpan Hasil
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
