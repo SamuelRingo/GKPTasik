@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from "react";
-import { Plus, PencilSimple, Trash, X, UploadSimple, FileArrowUp } from "@phosphor-icons/react"; // Update Ikon
+import { Plus, PencilSimple, Trash, X, UploadSimple, FileArrowUp } from "@phosphor-icons/react";
 import { createArsip, updateArsip, deleteArsip } from "@/app/dashboard/arsip/actions";
+import { OcrModal as OcrModalInternal } from "./OcrModal";
 import toast from "react-hot-toast";
 
 type Arsip = {
@@ -11,13 +12,15 @@ type Arsip = {
   kategori: string | null;
   url_file: string | null;
   created_at: string;
+  status_ocr?: string | null;
+  hasil_ocr?: string | null;
 };
 
 // --- KOMPONEN 1: ADD BUTTON & MODAL (FILE UPLOAD) ---
 export function AddArsipButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [fileName, setFileName] = useState<string>(""); // State untuk nama file
+  const [fileName, setFileName] = useState<string>("");
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
@@ -32,12 +35,11 @@ export function AddArsipButton() {
     } else {
         toast.success('Dokumen berhasil diupload!');
         setIsOpen(false);
-        setFileName(""); // Reset
+        setFileName("");
     }
     setIsLoading(false);
   };
 
-  // Helper untuk menampilkan nama file saat dipilih
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
         setFileName(e.target.files[0].name);
@@ -69,8 +71,8 @@ export function AddArsipButton() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
                     <select name="kategori" className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-primary bg-white">
                         <option value="Warta">Warta Jemaat</option>
-                        <option value="Laporan">Laporan Keuangan</option>
-                        <option value="Dokumen">Dokumen Legal</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Dokumen">Dokumen</option>
                         <option value="Media">Media & Foto</option>
                     </select>
                 </div>
@@ -92,7 +94,7 @@ export function AddArsipButton() {
                             <span className="text-sm font-medium text-gray-900">
                                 {fileName ? fileName : "Klik untuk pilih file"}
                             </span>
-                            <span className="text-xs text-gray-400 mt-1">PDF, JPG, Word, Excel (Max 10MB)</span>
+                            <span className="text-xs text-gray-400 mt-1">(Max Size 10MB)</span>
                         </div>
                     </div>
                 </div>
@@ -114,6 +116,8 @@ export function AddArsipButton() {
 // --- KOMPONEN 2: ACTIONS ---
 export function ArsipActions({ arsip }: { arsip: Arsip }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isOcrOpen, setIsOcrOpen] = useState(false);
+  const [ocrViewMode, setOcrViewMode] = useState(false);
 
   const handleEdit = async (formData: FormData) => {
     const toastId = toast.loading('Update data...');
@@ -158,6 +162,40 @@ export function ArsipActions({ arsip }: { arsip: Arsip }) {
 
   return (
     <div className="flex justify-end gap-2">
+      {arsip.kategori && ['Warta', 'Laporan', 'Dokumen'].includes(arsip.kategori) && (
+        <>
+          {arsip.status_ocr === 'completed' ? (
+            // Tombol Lihat Hasil OCR
+            <button 
+              onClick={() => {
+                setOcrViewMode(true);
+                setIsOcrOpen(true);
+              }}
+              className="p-2 text-blue-600 hover:bg-blue-50 rounded transition"
+              title="Lihat hasil OCR"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
+          ) : (
+            // Tombol OCR
+            <button 
+              onClick={() => {
+                setOcrViewMode(false);
+                setIsOcrOpen(true);
+              }}
+              className="p-2 text-green-600 hover:bg-green-50 rounded transition"
+              title="Gunakan OCR"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+            </button>
+          )}
+        </>
+      )}
       <button onClick={() => setIsEditOpen(true)} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition"><PencilSimple size={18} weight="bold"/></button>
       <button onClick={handleDelete} className="p-2 text-red-600 hover:bg-red-50 rounded transition"><Trash size={18} weight="bold"/></button>
 
@@ -179,8 +217,8 @@ export function ArsipActions({ arsip }: { arsip: Arsip }) {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
                     <select name="kategori" defaultValue={arsip.kategori || "Warta"} className="w-full px-4 py-2 border rounded-lg bg-white">
                         <option value="Warta">Warta Jemaat</option>
-                        <option value="Laporan">Laporan Keuangan</option>
-                        <option value="Dokumen">Dokumen Legal</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Dokumen">Dokumen</option>
                         <option value="Media">Media & Foto</option>
                     </select>
                 </div>
@@ -191,6 +229,27 @@ export function ArsipActions({ arsip }: { arsip: Arsip }) {
             </form>
            </div>
         </div>
+      )}
+
+      {/* OCR Modal */}
+      {isOcrOpen && arsip.url_file && (
+        <OcrModalInternal
+          isOpen={isOcrOpen}
+          onClose={() => {
+            setIsOcrOpen(false);
+            setOcrViewMode(false);
+          }}
+          arsipId={arsip.id}
+          fileUrl={arsip.url_file}
+          namaDokumen={arsip.nama_dokumen}
+          viewMode={ocrViewMode}
+          hasilOcr={arsip.hasil_ocr || ''}
+          onSuccess={() => {
+            setIsOcrOpen(false);
+            setOcrViewMode(false);
+            // Optionally refresh the page or update state
+          }}
+        />
       )}
     </div>
   );

@@ -32,8 +32,8 @@ export default function KategoriFilter() {
       >
         <option value="">Semua Kategori</option>
         <option value="Warta">Warta Jemaat</option>
-        <option value="Laporan">Laporan Keuangan</option>
-        <option value="Dokumen">Dokumen Legal</option>
+        <option value="Laporan">Laporan</option>
+        <option value="Dokumen">Dokumen </option>
         <option value="Media">Media & Foto</option>
       </select>
 
